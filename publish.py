@@ -4,24 +4,59 @@ Arguments:
 
     exchange        name of exchange
     routing_key     interpretation of routing key depends on exchange type
+
+Options:
+
+    -e --encrypt    encrypt message using secret TKLAMQ_SECRET
 """
 
+import os
 import sys
+import getopt
+
+from crypto import encrypt
 from amqp import __doc__ as env_doc
 from amqp import connect
 
-def usage():
-    print >> sys.stderr, "Syntax: %s <exchange> <routing_key>" % sys.argv[0]
+def usage(e=None):
+    if e:
+        print >> sys.stderr, "error: " + str(e)
+
+    print >> sys.stderr, "Syntax: %s [-opts] <exchange> <routing_key>" % sys.argv[0]
     print >> sys.stderr, "Message is stdin"
     print >> sys.stderr, __doc__, env_doc
     sys.exit(1)
 
+def fatal(s):
+    print >> sys.stderr, "error: " + str(s)
+    sys.exit(1)
+
 def main():
-    if not len(sys.argv) == 3:
+    try:
+        opts, args = getopt.gnu_getopt(sys.argv[1:], 'he')
+    except getopt.GetoptError, e:
+        usage(e)
+
+    opt_encrypt = False
+    for opt, val in opts:
+        if opt == '-h':
+            usage()
+
+        if opt in ('-e', '--encrypt'):
+            opt_encrypt = True
+
+    if not len(args) == 2:
         usage()
 
-    exchange, routing_key = sys.argv[1:]
+    secret = os.getenv('TKLAMQ_SECRET', None)
+    if opt_encrypt and not secret:
+        fatal('TKLAMQ_SECRET not specified, cannot encrypt')
+
+    exchange, routing_key = args
     message = sys.stdin.read()
+
+    if opt_encrypt:
+        message = {'ciphertext': encrypt(message, secret)}
 
     conn = connect()
     conn.publish(exchange, routing_key, message)
