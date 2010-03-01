@@ -65,7 +65,7 @@ class Connection:
 
         consumer = Consumer(connection=self.broker, queue=queue)
         consumer.register_callback(callback)
-        for message in consumer.iterqueue(limit=None, infinite=False):
+        for message in consumer.iterqueue(limit=limit, infinite=False):
             consumer.receive(message.payload, message)
 
         consumer.close()
