@@ -1,7 +1,7 @@
 """
 Environment variables:
 
-    BROKER_HOSTNAME     default: localhost
+    BROKER_HOST         default: localhost
     BROKER_PORT         default: 5672
     BROKER_VHOST        default: /
     BROKER_USERID       default: guest
@@ -13,7 +13,7 @@ import os
 from carrot.connection import BrokerConnection
 from carrot.messaging import Publisher, Consumer
 
-BROKER_HOSTNAME = os.getenv('BROKER_HOSTNAME', 'localhost')
+BROKER_HOST = os.getenv('BROKER_HOST', 'localhost')
 BROKER_PORT = os.getenv('BROKER_PORT', 5672)
 BROKER_VHOST = os.getenv('BROKER_VHOST', '/')
 BROKER_USERID = os.getenv('BROKER_USERID', 'guest')
@@ -92,7 +92,7 @@ def _consume_callback(message_data, message):
 
 def connect():
     """convenience method using environment variables"""
-    return Connection(BROKER_HOSTNAME, BROKER_PORT, BROKER_VHOST,
+    return Connection(BROKER_HOST, BROKER_PORT, BROKER_VHOST,
                       BROKER_USERID, BROKER_PASSWORD)
 
 
