@@ -49,21 +49,25 @@ class Connection:
         consumer.declare()
         consumer.close()
 
-    def consume(self, queue, limit=None, callback=None):
+    def consume(self, queue, limit=None, callback=None, auto_declare=False):
         """consume messages in queue
         
-        queue    - name of queue
-        limit    - amount of messages to iterate through (default: no limit)
+        queue           - name of queue
+        limit           - amount of messages to iterate through (default: no limit)
 
-        callback - the callback function to call when a new message is received
-                   must take two arguments: message_data, message
-                   must send the acknowledgement: message.ack()
-                   default: print message to stdout and send ack
+        callback        - method to call when a new message is received
+                          must take two arguments: message_data, message
+                          must send the acknowledgement: message.ack()
+                          default: print message to stdout and send ack
+
+        auto_declare    - automatically declare the queue (default: false)
         """
         if not callback:
             callback = _consume_callback
 
-        consumer = Consumer(connection=self.broker, queue=queue)
+        consumer = Consumer(connection=self.broker, queue=queue,
+                            auto_declare=auto_declare)
+
         consumer.register_callback(callback)
         for message in consumer.iterqueue(limit=limit, infinite=False):
             consumer.receive(message.payload, message)
