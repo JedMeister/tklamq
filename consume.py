@@ -24,7 +24,7 @@ def fatal(s):
     sys.exit(1)
 
 def decrypt_callback(message_data, message):
-    if message_data.has_key('ciphertext'):
+    if type(message_data) == dict and message_data.has_key('ciphertext'):
         secret = os.getenv('TKLAMQ_SECRET', None)
         if not secret:
             fatal('TKLAMQ_SECRET not specified, cannot decrypt ciphertext')
