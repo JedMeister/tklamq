@@ -3,9 +3,9 @@ Environment variables:
 
     BROKER_HOST         default: localhost
     BROKER_PORT         default: 5672
-    BROKER_VHOST        default: /
-    BROKER_USERID       default: guest
+    BROKER_USER         default: guest
     BROKER_PASSWORD     default: guest
+    BROKER_VHOST        default: /
 """
 
 import os
@@ -15,9 +15,9 @@ from carrot.messaging import Publisher, Consumer
 
 BROKER_HOST = os.getenv('BROKER_HOST', 'localhost')
 BROKER_PORT = os.getenv('BROKER_PORT', 5672)
-BROKER_VHOST = os.getenv('BROKER_VHOST', '/')
-BROKER_USERID = os.getenv('BROKER_USERID', 'guest')
+BROKER_USER = os.getenv('BROKER_USER', 'guest')
 BROKER_PASSWORD = os.getenv('BROKER_PASSWORD', 'guest')
+BROKER_VHOST = os.getenv('BROKER_VHOST', '/')
 
 class Error(Exception):
     pass
@@ -93,6 +93,6 @@ def _consume_callback(message_data, message):
 def connect():
     """convenience method using environment variables"""
     return Connection(BROKER_HOST, BROKER_PORT, BROKER_VHOST,
-                      BROKER_USERID, BROKER_PASSWORD)
+                      BROKER_USER, BROKER_PASSWORD)
 
 
