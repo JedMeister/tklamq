@@ -37,7 +37,7 @@ help:
 # DRY macros
 truepath = $(shell echo $1 | sed -e 's/^debian\/$(progname)//')
 libpath = $(call truepath,$(PATH_INSTALL_LIB))/$$(basename $1)
-subcommand = $(progname)-$$(echo $1 | sed 's|.*/||; s/.py$$//')
+subcommand = $(progname)-$$(echo $1 | sed 's|.*/||; s/^cmd_//; s/_/-/g; s/.py$$//')
 echo-do = echo $1; $1
 
 # first argument: code we execute if there is just one executable module
@@ -65,16 +65,16 @@ install:
 	cp *.py $(PATH_INSTALL_LIB)
 
 	$(call with-py-executables, \
-	       ln -fs $(call libpath, $$module) $(PATH_BIN)/$(progname), \
-		   ln -fs $(call libpath, $$module) $(PATH_BIN)/$(call subcommand, $$module))
+	  ln -fs $(call libpath, $$module) $(PATH_BIN)/$(progname), \
+	  ln -fs $(call libpath, $$module) $(PATH_BIN)/$(call subcommand, $$module))
 
 # target: uninstall
 uninstall:
 	rm -rf $(PATH_INSTALL_LIB)
 
 	$(call with-py-executables, \
-		   rm -f $(PATH_BIN)/$(progname), \
-		   rm -f $(PATH_BIN)/$(call subcommand, $$module))
+	  rm -f $(PATH_BIN)/$(progname), \
+	  rm -f $(PATH_BIN)/$(call subcommand, $$module))
 
 # target: clean
 clean:
