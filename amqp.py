@@ -9,9 +9,12 @@ Environment variables:
 """
 
 import os
+from datetime import datetime
 
 from carrot.connection import BrokerConnection
 from carrot.messaging import Publisher, Consumer
+
+from crypto import encrypt, decrypt
 
 BROKER_HOST = os.getenv('BROKER_HOST', 'localhost')
 BROKER_PORT = os.getenv('BROKER_PORT', 5672)
@@ -99,4 +102,46 @@ def connect():
     return Connection(BROKER_HOST, BROKER_PORT, BROKER_VHOST,
                       BROKER_USER, BROKER_PASSWORD)
 
+
+def encode_message(content, secret=None):
+    """encode message envelope
+    args
+    - content           message content
+    - secret            secret key to encrypt message (default: None)
+
+    returns message envelope (dict)
+    - content           message content (encrypted if secret key is specified)
+    - encrypted         boolean flag if content is encrypted
+    - timestamp-utc     datetime.utcnow() in list format
+    """
+    encrypted = False
+    timestamp = datetime.utcnow().strftime("%Y %m %d %H %M %S %M").split()
+
+    if secret:
+        encrypted = True
+        content = encrypt(content, secret)
+
+    message = {'encrypted': encrypted,
+               'content': content,
+               'timestamp-utc': timestamp}
+
+    return message
+
+def decode_message(message_data, secret=None):
+    """decode message envelope
+    args
+    - message_data      encoded message envelope (see encode_message)
+    - secret            secret key to decrypt message (if encrypted)
+
+    returns (content, timestamp)
+    - content           content string (plaintext)
+    - timestamp         datetime instance
+    """
+    content = str(message_data['content'])
+    timestamp = datetime(*map(lambda f: int(f), message_data['timestamp-utc']))
+
+    if message_data['encrypted']:
+        content = decrypt(content, secret)
+
+    return content, timestamp
 

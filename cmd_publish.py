@@ -14,9 +14,8 @@ import os
 import sys
 import getopt
 
-from crypto import encrypt
 from amqp import __doc__ as env_doc
-from amqp import connect
+from amqp import connect, encode_message
 
 def usage(e=None):
     if e:
@@ -52,11 +51,13 @@ def main():
     if opt_encrypt and not secret:
         fatal('TKLAMQ_SECRET not specified, cannot encrypt')
 
-    exchange, routing_key = args
-    message = sys.stdin.read()
+    if not opt_encrypt:
+        secret = None
 
-    if opt_encrypt:
-        message = {'ciphertext': encrypt(message, secret)}
+    exchange, routing_key = args
+
+    content = sys.stdin.read()
+    message = encode_message(content, secret=secret)
 
     conn = connect()
     conn.publish(exchange, routing_key, message)
