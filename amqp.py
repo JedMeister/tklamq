@@ -117,7 +117,7 @@ def encode_message(sender, content, secret=None):
     - timestamp-utc     datetime.utcnow() in list format
     """
     encrypted = False
-    timestamp = datetime.utcnow().strftime("%Y %m %d %H %M %S %M").split()
+    timestamp = datetime.utcnow().strftime("%Y %m %d %H %M %S").split()
 
     if secret:
         encrypted = True
