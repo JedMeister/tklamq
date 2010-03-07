@@ -8,6 +8,7 @@ Arguments:
 Options:
 
     -i --input=PATH     content to send (- for stdin)
+    -s --sender=        message sender
     -e --encrypt        encrypt message using secret TKLAMQ_SECRET
 """
 
@@ -33,18 +34,22 @@ def fatal(s):
 
 def main():
     try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:eh', ['input='])
+        opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:s:eh', ['input=', 'sender='])
     except getopt.GetoptError, e:
         usage(e)
 
-    opt_input = None
+    inputfile = None
+    sender = None
     opt_encrypt = False
     for opt, val in opts:
         if opt == '-h':
             usage()
 
         if opt in ('-i', '--input'):
-            opt_input = val
+            inputfile = val
+
+        if opt in ('-s', '--sender'):
+            sender = val
 
         if opt in ('-e', '--encrypt'):
             opt_encrypt = True
@@ -61,13 +66,13 @@ def main():
         secret = None
 
     content = ''
-    if opt_input == '-':
+    if inputfile == '-':
         content = sys.stdin.read()
-    elif opt_input:
-        content = file(opt_input).read()
+    elif inputfile:
+        content = file(inputfile).read()
 
     exchange, routing_key = args
-    message = encode_message(content, secret=secret)
+    message = encode_message(sender, content, secret=secret)
 
     conn = connect()
     conn.publish(exchange, routing_key, message)

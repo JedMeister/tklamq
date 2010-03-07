@@ -103,13 +103,15 @@ def connect():
                       BROKER_USER, BROKER_PASSWORD)
 
 
-def encode_message(content, secret=None):
+def encode_message(sender, content, secret=None):
     """encode message envelope
     args
+    - sender            message sender
     - content           message content
     - secret            secret key to encrypt message (default: None)
 
     returns message envelope (dict)
+    - sender            message sender
     - content           message content (encrypted if secret key is specified)
     - encrypted         boolean flag if content is encrypted
     - timestamp-utc     datetime.utcnow() in list format
@@ -121,7 +123,8 @@ def encode_message(content, secret=None):
         encrypted = True
         content = encrypt(content, secret)
 
-    message = {'encrypted': encrypted,
+    message = {'sender': sender,
+               'encrypted': encrypted,
                'content': content,
                'timestamp-utc': timestamp}
 
@@ -134,14 +137,16 @@ def decode_message(message_data, secret=None):
     - secret            secret key to decrypt message (if encrypted)
 
     returns (content, timestamp)
+    - sender            message sender
     - content           content string (plaintext)
     - timestamp         datetime instance
     """
+    sender = str(message_data['sender'])
     content = str(message_data['content'])
     timestamp = datetime(*map(lambda f: int(f), message_data['timestamp-utc']))
 
     if message_data['encrypted']:
         content = decrypt(content, secret)
 
-    return content, timestamp
+    return sender, content, timestamp
 

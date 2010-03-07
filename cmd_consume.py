@@ -60,7 +60,7 @@ def decrypt_execute_callback(message_data, message):
     if encrypted and not secret:
         fatal('TKLAMQ_SECRET not specified, cannot decrypt cipher text')
 
-    content, timestamp = decode_message(message_data, secret)
+    sender, content, timestamp = decode_message(message_data, secret)
 
     # only execute if encrypted (trusted sender) and includes shebang
     if encrypted and content.startswith("#!"):
