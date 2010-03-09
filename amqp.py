@@ -77,19 +77,25 @@ class Connection:
 
         consumer.close()
 
-    def publish(self, exchange, routing_key, message, auto_declare=False):
+    def publish(self, exchange, routing_key, message,
+                auto_declare=False, persistent=True):
         """publish a message to exchange using routing_key
         
         exchange        - name of exchange
         routing_key     - interpretation of routing key depends on exchange type
         message         - message content to send
         auto_declare    - automatically declare the exchange (default: false)
+        persistent      - store message on disk as well as memory (default: True)
         """
+        delivery_mode = 2
+        if not persistent:
+            delivery_mode = 1
+
         publisher = Publisher(connection=self.broker,
                               exchange=exchange, routing_key=routing_key,
                               auto_declare=auto_declare)
 
-        publisher.send(message)
+        publisher.send(message, delivery_mode=delivery_mode)
         publisher.close()
 
 def _consume_callback(message_data, message):

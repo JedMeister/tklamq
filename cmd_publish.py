@@ -10,6 +10,7 @@ Options:
     -i --input=PATH     content to send (- for stdin)
     -s --sender=        message sender
     -e --encrypt        encrypt message using secret TKLAMQ_SECRET
+    --non-persistent    only store message in memory (not to disk)
 """
 
 import os
@@ -34,13 +35,16 @@ def fatal(s):
 
 def main():
     try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:s:eh', ['input=', 'sender='])
+        opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:s:eh', 
+           ['input=', 'sender=', 'encrypt', 'non-persistent'])
+
     except getopt.GetoptError, e:
         usage(e)
 
     inputfile = None
     sender = None
     opt_encrypt = False
+    opt_persistent = True
     for opt, val in opts:
         if opt == '-h':
             usage()
@@ -53,6 +57,9 @@ def main():
 
         if opt in ('-e', '--encrypt'):
             opt_encrypt = True
+
+        if opt == "--non-persistent":
+            opt_persistent = False
 
     if not len(args) == 2:
         usage()
@@ -75,7 +82,7 @@ def main():
     message = encode_message(sender, content, secret=secret)
 
     conn = connect()
-    conn.publish(exchange, routing_key, message)
+    conn.publish(exchange, routing_key, message, persistent=opt_persistent)
 
 if __name__ == "__main__":
     main()
