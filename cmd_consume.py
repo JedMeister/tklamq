@@ -44,14 +44,9 @@ def execute(s):
     fh.writelines(s)
     fh.close()
 
-    try:
-        os.chmod(fh.path, 0750)
-        output = executil.getoutput(fh.path)
-        print "message processed (%s)" % fh.path
-    except executil.ExecError, e:
-        #todo: send 's' and 'e' back to hub
-        print "failed to process message, sending error to hub..."
-
+    os.chmod(fh.path, 0750)
+    output = executil.system(fh.path)
+    print "message processed (%s)" % fh.path
 
 def decrypt_execute_callback(message_data, message):
     encrypted = message_data['encrypted']
