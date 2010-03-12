@@ -4,7 +4,7 @@ Arguments:
 
     queue       queue to consume messages from
 
-if message content is encrypted, TKLAMQ_SECRET will be used as decryption key
+If message content is encrypted, TKLAMQ_SECRET will be used as decryption key
 """
 
 import os
