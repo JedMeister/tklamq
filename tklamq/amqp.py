@@ -142,7 +142,7 @@ def decode_message(message_data, secret=None):
     - message_data      encoded message envelope (see encode_message)
     - secret            secret key to decrypt message (if encrypted)
 
-    returns (content, timestamp)
+    returns (sender, content, timestamp)
     - sender            message sender
     - content           content string (plaintext)
     - timestamp         datetime instance
