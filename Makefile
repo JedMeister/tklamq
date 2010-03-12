@@ -62,7 +62,8 @@ install:
 	@echo 
 
 	install -d $(PATH_BIN) $(PATH_INSTALL_LIB)
-	cp *.py $(PATH_INSTALL_LIB)
+	python setup.py install --prefix $(prefix)
+	cp cmd_*.py $(PATH_INSTALL_LIB)
 
 	$(call with-py-executables, \
 	  ln -fs $(call libpath, $$module) $(PATH_BIN)/$(progname), \

@@ -9,8 +9,8 @@ Arguments:
 """
 
 import sys
-from amqp import __doc__ as env_doc
-from amqp import connect
+from tklamq.amqp import __doc__ as env_doc
+from tklamq.amqp import connect
 
 def usage():
     syntax = "Syntax: %s <exchange> <exchange_type> <binding> <queue>" % sys.argv[0]

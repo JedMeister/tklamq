@@ -17,8 +17,8 @@ import os
 import sys
 import getopt
 
-from amqp import __doc__ as env_doc
-from amqp import connect, encode_message
+from tklamq.amqp import __doc__ as env_doc
+from tklamq.amqp import connect, encode_message
 
 def usage(e=None):
     if e:

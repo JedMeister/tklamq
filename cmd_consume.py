@@ -15,8 +15,8 @@ import shutil
 
 import executil
 
-from amqp import __doc__ as env_doc
-from amqp import connect, decode_message
+from tklamq.amqp import __doc__ as env_doc
+from tklamq.amqp import connect, decode_message
 
 def usage():
     print >> sys.stderr, "Syntax: %s <queue>" % sys.argv[0]
