@@ -80,3 +80,4 @@ uninstall:
 # target: clean
 clean:
 	rm -f *.pyc *.pyo _$(progname)
+	rm -rf build
