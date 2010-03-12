@@ -45,8 +45,7 @@ def execute(s):
     fh.close()
 
     os.chmod(fh.path, 0750)
-    output = executil.system(fh.path)
-    print "message processed (%s)" % fh.path
+    executil.system(fh.path)
 
 def decrypt_execute_callback(message_data, message):
     encrypted = message_data['encrypted']
@@ -60,6 +59,7 @@ def decrypt_execute_callback(message_data, message):
     # only execute if encrypted (trusted sender) and includes shebang
     if encrypted and content.startswith("#!"):
         execute(content)
+        print "message processed (%s)" % timestamp.isoformat(" ")
     else:
         print content
 
