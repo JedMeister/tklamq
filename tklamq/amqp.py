@@ -16,12 +16,6 @@ from carrot.messaging import Publisher, Consumer
 
 from crypto import encrypt, decrypt
 
-BROKER_HOST = os.getenv('BROKER_HOST', 'localhost')
-BROKER_PORT = os.getenv('BROKER_PORT', 5672)
-BROKER_USER = os.getenv('BROKER_USER', 'guest')
-BROKER_PASSWORD = os.getenv('BROKER_PASSWORD', 'guest')
-BROKER_VHOST = os.getenv('BROKER_VHOST', '/')
-
 class Error(Exception):
     pass
 
@@ -105,6 +99,12 @@ def _consume_callback(message_data, message):
 
 def connect():
     """convenience method using environment variables"""
+    BROKER_HOST = os.getenv('BROKER_HOST', 'localhost')
+    BROKER_PORT = os.getenv('BROKER_PORT', 5672)
+    BROKER_USER = os.getenv('BROKER_USER', 'guest')
+    BROKER_PASSWORD = os.getenv('BROKER_PASSWORD', 'guest')
+    BROKER_VHOST = os.getenv('BROKER_VHOST', '/')
+
     return Connection(BROKER_HOST, BROKER_PORT, BROKER_VHOST,
                       BROKER_USER, BROKER_PASSWORD)
 
