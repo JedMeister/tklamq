@@ -22,9 +22,6 @@ def encrypt(plaintext, secret, lazy=True, checksum=True):
 
         returns ciphertext (urlsafe base64 encoded)
     """
-    if type(plaintext) == unicode:
-        plaintext = str(plaintext)
-
     secret = _lazysecret(secret) if lazy else secret
     encobj = AES.new(secret, AES.MODE_CFB)
     if checksum:

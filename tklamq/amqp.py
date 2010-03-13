@@ -9,6 +9,7 @@ Environment variables:
 """
 
 import os
+import simplejson as json
 from datetime import datetime
 
 from carrot.connection import BrokerConnection
@@ -125,6 +126,8 @@ def encode_message(sender, content, secret=None):
     encrypted = False
     timestamp = datetime.utcnow().strftime("%Y %m %d %H %M %S").split()
 
+    content = json.dumps(content)
+
     if secret:
         encrypted = True
         content = encrypt(content, secret)
@@ -154,5 +157,6 @@ def decode_message(message_data, secret=None):
     if message_data['encrypted']:
         content = decrypt(content, secret)
 
+    content = json.loads(content)
     return sender, content, timestamp
 
