@@ -39,7 +39,8 @@ class Connection:
         queue           - queue to bind to exchange using binding (optional)
         """
         if (binding and not queue) or (queue and not binding):
-            raise Error("binding and queue are not mutually exclusive")
+            if queue and not exchange_type == "fanout":
+                raise Error("binding and queue are not mutually exclusive")
 
         consumer = Consumer(connection=self.broker,
                             exchange=exchange, exchange_type=exchange_type,
