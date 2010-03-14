@@ -17,11 +17,17 @@ def usage():
     print >> sys.stderr, syntax, __doc__, env_doc
     sys.exit(1)
 
+def fatal(s):
+    print >> sys.stderr, "error: " + str(s)
+    sys.exit(1)
+
 def main():
     if not len(sys.argv) == 5:
         usage()
 
     exchange, exchange_type, binding, queue = sys.argv[1:]
+    if not exchange_type in ('direct', 'topic', 'fanout'):
+        fatal("Invalid exchange type")
 
     conn = connect()
     conn.declare(exchange, exchange_type, binding, queue)
