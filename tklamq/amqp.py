@@ -9,6 +9,7 @@ Environment variables:
 """
 
 import os
+import base64
 import simplejson as json
 from datetime import datetime
 
@@ -135,7 +136,7 @@ def encode_message(sender, content, secret=None):
 
     message = {'sender': sender,
                'encrypted': encrypted,
-               'content': content,
+               'content': base64.urlsafe_b64encode(content),
                'timestamp-utc': timestamp}
 
     return message
@@ -152,7 +153,7 @@ def decode_message(message_data, secret=None):
     - timestamp         datetime instance
     """
     sender = str(message_data['sender'])
-    content = str(message_data['content'])
+    content = base64.urlsafe_b64decode(str(message_data['content']))
     timestamp = datetime(*map(lambda f: int(f), message_data['timestamp-utc']))
 
     if message_data['encrypted']:

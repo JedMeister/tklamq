@@ -1,6 +1,5 @@
 from Crypto.Cipher import AES
 import zlib
-import base64
 import struct
 
 class CheckSumError(Exception):
@@ -20,18 +19,18 @@ def encrypt(plaintext, secret, lazy=True, checksum=True):
         lazy        - pad secret if less than legal blocksize (default: True)
         checksum    - attach crc32 byte encoded (default: True)
 
-        returns ciphertext (urlsafe base64 encoded)
+        returns ciphertext
     """
     secret = _lazysecret(secret) if lazy else secret
     encobj = AES.new(secret, AES.MODE_CFB)
     if checksum:
         plaintext += struct.pack("i", zlib.crc32(plaintext))
 
-    return base64.urlsafe_b64encode(encobj.encrypt(plaintext))
+    return encobj.encrypt(plaintext)
 
 def decrypt(ciphertext, secret, lazy=True, checksum=True):
     """decrypt ciphertext with secret
-        ciphertext  - encrypted content to decrypt (urlsafe base64 encoded)
+        ciphertext  - encrypted content to decrypt
         secret      - secret to decrypt ciphertext
         lazy        - pad secret if less than legal blocksize (default: True)
         checksum    - verify crc32 byte encoded checksum (default: True)
@@ -40,7 +39,7 @@ def decrypt(ciphertext, secret, lazy=True, checksum=True):
     """
     secret = _lazysecret(secret) if lazy else secret
     encobj = AES.new(secret, AES.MODE_CFB)
-    plaintext = encobj.decrypt(base64.urlsafe_b64decode(ciphertext))
+    plaintext = encobj.decrypt(ciphertext)
     if checksum:
         crc, plaintext = (plaintext[-4:], plaintext[:-4])
         if not crc == struct.pack("i", zlib.crc32(plaintext)):
