@@ -1,6 +1,5 @@
 from Crypto.Cipher import AES
-import zlib
-import struct
+from hashlib import sha1
 
 class CheckSumError(Exception):
     pass
@@ -17,14 +16,14 @@ def encrypt(plaintext, secret, lazy=True, checksum=True):
         plaintext   - content to encrypt
         secret      - secret to encrypt plaintext
         lazy        - pad secret if less than legal blocksize (default: True)
-        checksum    - attach crc32 byte encoded (default: True)
+        checksum    - attach sha1 digest byte encoded (default: True)
 
         returns ciphertext
     """
     secret = _lazysecret(secret) if lazy else secret
     encobj = AES.new(secret, AES.MODE_CFB)
     if checksum:
-        plaintext += struct.pack("i", zlib.crc32(plaintext))
+        plaintext += sha1(plaintext).digest()
 
     return encobj.encrypt(plaintext)
 
@@ -33,7 +32,7 @@ def decrypt(ciphertext, secret, lazy=True, checksum=True):
         ciphertext  - encrypted content to decrypt
         secret      - secret to decrypt ciphertext
         lazy        - pad secret if less than legal blocksize (default: True)
-        checksum    - verify crc32 byte encoded checksum (default: True)
+        checksum    - verify sha1 digest byte encoded checksum (default: True)
 
         returns plaintext
     """
@@ -41,8 +40,8 @@ def decrypt(ciphertext, secret, lazy=True, checksum=True):
     encobj = AES.new(secret, AES.MODE_CFB)
     plaintext = encobj.decrypt(ciphertext)
     if checksum:
-        crc, plaintext = (plaintext[-4:], plaintext[:-4])
-        if not crc == struct.pack("i", zlib.crc32(plaintext)):
+        digest, plaintext = (plaintext[-20:], plaintext[:-20])
+        if not digest == sha1(plaintext).digest():
             raise CheckSumError("checksum mismatch")
 
     return plaintext
