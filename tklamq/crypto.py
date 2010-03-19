@@ -1,3 +1,5 @@
+# Copyright (c) 2010 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
+
 from Crypto.Cipher import AES
 from hashlib import sha1
 
