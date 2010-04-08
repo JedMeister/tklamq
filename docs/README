@@ -1,0 +1,11 @@
+TKLAMQ: TurnKey Linux Advanced Message Queue (AMQ) client
+=========================================================
+
+TKLAMQ has 3 commands:
+
+    tklamq-declare      Declares an exchange/binding/queue
+    tklamq-publish      Publishes a message to exchange/routing_key
+    tklamq-consume      Consumes messages from a queue
+
+    See commands help for usage and environment variables.
+
