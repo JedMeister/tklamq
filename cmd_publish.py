@@ -9,14 +9,16 @@ Arguments:
 Options:
 
     -i --input=PATH     content to send (- for stdin)
-    -s --sender=        message sender
+    -j --json           treat input as encoded json
     -e --encrypt        encrypt message using secret TKLAMQ_SECRET
+    -s --sender=        message sender
     --non-persistent    only store message in memory (not to disk)
 """
 
 import os
 import sys
 import getopt
+import simplejson as json
 
 from tklamq.amqp import __doc__ as env_doc
 from tklamq.amqp import connect, encode_message
@@ -36,14 +38,15 @@ def fatal(s):
 
 def main():
     try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:s:eh', 
-           ['input=', 'sender=', 'encrypt', 'non-persistent'])
+        opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:s:e:jh', 
+           ['input=', 'sender=', 'encrypt', 'json', 'non-persistent'])
 
     except getopt.GetoptError, e:
         usage(e)
 
     inputfile = None
     sender = None
+    opt_json = False
     opt_encrypt = False
     opt_persistent = True
     for opt, val in opts:
@@ -58,6 +61,9 @@ def main():
 
         if opt in ('-e', '--encrypt'):
             opt_encrypt = True
+
+        if opt in ('-j', '--json'):
+            opt_json = True
 
         if opt == "--non-persistent":
             opt_persistent = False
@@ -78,6 +84,9 @@ def main():
         content = sys.stdin.read()
     elif inputfile:
         content = file(inputfile).read()
+
+    if opt_json:
+        content = json.loads(content)
 
     exchange, routing_key = args
     message = encode_message(sender, content, secret=secret)
