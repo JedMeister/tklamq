@@ -14,5 +14,4 @@ Depends:
  python-carrot,
  python-crypto,
  python-simplejson,
-Section: misc
 Description: TurnKey Linux Advanced Message Queue (AMQ) client
