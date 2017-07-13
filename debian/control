@@ -4,13 +4,15 @@ Priority: optional
 Maintainer: Alon Swartz <alon@turnkeylinux.org>
 Build-Depends:
  debhelper (>= 10),
+ dh-python,
+ python-all (>= 2.6.6-3~),
 Standards-Version: 4.0.0
 
 Package: tklamq
 Architecture: any
 Depends:
  ${misc:Depends},
- python (>= 2.4),
+ ${python:Depends},
  python-amqplib,
  python-carrot,
  python-crypto,
