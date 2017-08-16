@@ -2,11 +2,19 @@ Source: tklamq
 Section: misc
 Priority: optional
 Maintainer: Alon Swartz <alon@turnkeylinux.org>
-Build-Depends: debhelper (>> 4.2.0), python-support
-Standards-Version: 3.6.1
+Build-Depends:
+ debhelper (>= 10),
+ dh-python,
+ python-all (>= 2.6.6-3~),
+Standards-Version: 4.0.0
 
 Package: tklamq
 Architecture: any
-Depends: python (>= 2.4), python-crypto, python-simplejson, python-carrot, python-amqplib
-Section: misc
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ python-amqplib,
+ python-carrot,
+ python-crypto,
+ python-simplejson,
 Description: TurnKey Linux Advanced Message Queue (AMQ) client
