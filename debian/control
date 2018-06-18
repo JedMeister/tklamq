@@ -14,7 +14,7 @@ Depends:
  ${misc:Depends},
  ${python:Depends},
  python-amqplib,
- python-carrot,
+ python-kombu,
  python-crypto,
  python-simplejson,
 Description: TurnKey Linux Advanced Message Queue (AMQ) client
