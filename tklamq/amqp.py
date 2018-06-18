@@ -15,8 +15,8 @@ import base64
 import simplejson as json
 from datetime import datetime
 
-from carrot.connection import BrokerConnection
-from carrot.messaging import Publisher, Consumer
+from kombu.connection import BrokerConnection
+from kombu.compat import Publisher, Consumer
 
 from crypto import encrypt, decrypt
 
