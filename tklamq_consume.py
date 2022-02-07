@@ -1,25 +1,13 @@
 #!/usr/bin/python3
 # Copyright (c) 2010-2021 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
 # Copyright (c) 2022 TurnKey GNU/Linux <admin@turnkeylinux.org> - all rights reserved
-"""
-Arguments:
-
-    queue       queue to consume messages from
-
-If message content is encrypted, TKLAMQ_SECRET will be used as decryption key
-"""
 
 import os
 import sys
+import argparse
 
-from tklamq.amqp import __doc__ as env_doc
-from tklamq.amqp import connect, decode_message
-
-
-def usage():
-    print("Syntax: %s <queue>" % sys.argv[0], file=sys.stderr)
-    print(__doc__, env_doc, file=sys.stderr)
-    sys.exit(1)
+from tklamq_lib.amqp import __doc__ as env_doc
+from tklamq_lib.amqp import connect, decode_message
 
 
 def fatal(s):
@@ -41,13 +29,22 @@ def decrypt_callback(message_data, message):
 
 
 def main():
-    if not len(sys.argv) == 2:
-        usage()
-
-    queue = sys.argv[1]
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        prog="tklamq-consume",
+        description="Consumes messages from a queue",
+        epilog=(f"{env_doc}"
+                "    TKLAMQ_SECRET"
+                "       decryption key (required if encrypted)")
+    )
+    parser.add_argument(
+        "queue",
+        help="queue to consume messages from",
+    )
+    args = parser.parse_args()
 
     conn = connect()
-    conn.consume(queue, callback=decrypt_callback)
+    conn.consume(args.queue, callback=decrypt_callback)
 
 
 if __name__ == "__main__":

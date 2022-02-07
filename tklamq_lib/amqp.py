@@ -2,8 +2,7 @@
 # Copyright (c) 2022 TurnKey GNU/Linux <admin@turnkeylinux.org> - all rights reserved
 
 """
-Environment variables:
-
+environment variables:
     BROKER_HOST         default: localhost
     BROKER_PORT         default: 5672
     BROKER_USER         default: guest
@@ -13,7 +12,7 @@ Environment variables:
 
 import os
 import base64
-import simplejson as json
+import json
 from datetime import datetime
 
 from kombu.connection import BrokerConnection
