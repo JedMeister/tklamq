@@ -1,5 +1,3 @@
-#!/usr/bin/dh-exec
-
-tklamq_consume.py   => /usr/bin/tklamq-consume
-tklamq_declare.py   => /usr/bin/tklamq-declare
-tklamq_publish.py   => /usr/bin/tklamq-publish
+tklamq-consume  /usr/bin/
+tklamq-declare  /usr/bin/
+tklamq-publish  /usr/bin/

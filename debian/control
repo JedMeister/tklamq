@@ -5,7 +5,6 @@ Maintainer: Jeremy Davis <jeremy@turnkeylinux.org>
 Build-Depends:
  debhelper (>= 10),
  dh-python,
- dh-exec,
  python3-all (>= 3.6~),
 Standards-Version: 4.0.0
 
