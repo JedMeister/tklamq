@@ -1,7 +1,7 @@
 # Copyright (c) 2010-2021 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
 # Copyright (c) 2022 TurnKey GNU/Linux <admin@turnkeylinux.org> - all rights reserved
 
-from Crypto.Cipher import AES
+from Cryptodome.Cipher import AES
 from hashlib import sha1
 
 class CheckSumError(Exception):
