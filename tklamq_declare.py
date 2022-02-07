@@ -12,7 +12,7 @@ from tklamq.amqp import connect
 def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        prog="tklamq-declare"
+        prog="tklamq-declare",
         description="Declares an exchange/binding/queue",
         epilog=env_doc,
     )
