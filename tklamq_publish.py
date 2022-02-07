@@ -25,15 +25,15 @@ from tklamq.amqp import connect, encode_message
 
 def usage(e=None):
     if e:
-        print >> sys.stderr, "error: " + str(e)
+        print("error: " + str(e), file=sys.stderr)
 
-    print >> sys.stderr, "Syntax: %s [-opts] <exchange> <routing_key>" % sys.argv[0]
-    print >> sys.stderr, "Message is stdin"
-    print >> sys.stderr, __doc__, env_doc
+    print("Syntax: %s [-opts] <exchange> <routing_key>" % sys.argv[0], file=sys.stderr)
+    print("Message is stdin", file=sys.stderr)
+    print(__doc__, env_doc, file=sys.stderr)
     sys.exit(1)
 
 def fatal(s):
-    print >> sys.stderr, "error: " + str(s)
+    print("error: " + str(s), file=sys.stderr)
     sys.exit(1)
 
 def main():
@@ -41,7 +41,7 @@ def main():
         opts, args = getopt.gnu_getopt(sys.argv[1:], 'i:s:e:jh', 
            ['input=', 'sender=', 'encrypt', 'json', 'non-persistent'])
 
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         usage(e)
 
     inputfile = None

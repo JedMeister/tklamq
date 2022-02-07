@@ -15,12 +15,12 @@ from tklamq.amqp import __doc__ as env_doc
 from tklamq.amqp import connect, decode_message
 
 def usage():
-    print >> sys.stderr, "Syntax: %s <queue>" % sys.argv[0]
-    print >> sys.stderr, __doc__, env_doc
+    print("Syntax: %s <queue>" % sys.argv[0], file=sys.stderr)
+    print(__doc__, env_doc, file=sys.stderr)
     sys.exit(1)
 
 def fatal(s):
-    print >> sys.stderr, "error: " + str(s)
+    print("error: " + str(s), file=sys.stderr)
     sys.exit(1)
 
 def decrypt_callback(message_data, message):
@@ -31,7 +31,7 @@ def decrypt_callback(message_data, message):
         fatal('TKLAMQ_SECRET not specified, cannot decrypt cipher text')
 
     sender, content, timestamp = decode_message(message_data, secret)
-    print content
+    print(content)
 
     message.ack()
 

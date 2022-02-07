@@ -15,11 +15,11 @@ from tklamq.amqp import connect
 
 def usage():
     syntax = "Syntax: %s <exchange> <exchange_type> <binding> <queue>" % sys.argv[0]
-    print >> sys.stderr, syntax, __doc__, env_doc
+    print(syntax, __doc__, env_doc, file=sys.stderr)
     sys.exit(1)
 
 def fatal(s):
-    print >> sys.stderr, "error: " + str(s)
+    print("error: " + str(s), file=sys.stderr)
     sys.exit(1)
 
 def main():

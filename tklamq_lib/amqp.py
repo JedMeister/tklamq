@@ -18,7 +18,7 @@ from datetime import datetime
 from kombu.connection import BrokerConnection
 from kombu.compat import Publisher, Consumer
 
-from crypto import encrypt, decrypt
+from .crypto import encrypt, decrypt
 
 class Error(Exception):
     pass
@@ -99,7 +99,7 @@ class Connection:
 
 def _consume_callback(message_data, message):
     """default consume callback if not specified"""
-    print message_data
+    print(message_data)
     message.ack()
 
 def connect():
@@ -156,7 +156,7 @@ def decode_message(message_data, secret=None):
     """
     sender = str(message_data['sender'])
     content = base64.urlsafe_b64decode(str(message_data['content']))
-    timestamp = datetime(*map(lambda f: int(f), message_data['timestamp-utc']))
+    timestamp = datetime(*[int(f) for f in message_data['timestamp-utc']])
 
     if message_data['encrypted']:
         content = decrypt(content, secret)
