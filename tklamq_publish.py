@@ -24,6 +24,7 @@ import simplejson as json
 from tklamq.amqp import __doc__ as env_doc
 from tklamq.amqp import connect, encode_message
 
+
 def usage(e=None):
     if e:
         print("error: " + str(e), file=sys.stderr)
@@ -33,9 +34,11 @@ def usage(e=None):
     print(__doc__, env_doc, file=sys.stderr)
     sys.exit(1)
 
+
 def fatal(s):
     print("error: " + str(s), file=sys.stderr)
     sys.exit(1)
+
 
 def main():
     try:
@@ -95,6 +98,6 @@ def main():
     conn = connect()
     conn.publish(exchange, routing_key, message, persistent=opt_persistent)
 
+
 if __name__ == "__main__":
     main()
-

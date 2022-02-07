@@ -4,8 +4,10 @@
 from Cryptodome.Cipher import AES
 from hashlib import sha1
 
-class CheckSumError(Exception):
+
+class TklAmqCheckSumError(Exception):
     pass
+
 
 def _lazysecret(secret, blocksize=32, padding='}'):
     """pads secret if not legal AES block size (16, 24, 32)"""
@@ -13,6 +15,7 @@ def _lazysecret(secret, blocksize=32, padding='}'):
         return secret + (blocksize - len(secret)) * padding
 
     return secret
+
 
 def encrypt(plaintext, secret, lazy=True, checksum=True):
     """encrypt plaintext with secret
@@ -30,6 +33,7 @@ def encrypt(plaintext, secret, lazy=True, checksum=True):
 
     return encobj.encrypt(plaintext)
 
+
 def decrypt(ciphertext, secret, lazy=True, checksum=True):
     """decrypt ciphertext with secret
         ciphertext  - encrypted content to decrypt
@@ -45,7 +49,6 @@ def decrypt(ciphertext, secret, lazy=True, checksum=True):
     if checksum:
         digest, plaintext = (plaintext[-20:], plaintext[:-20])
         if not digest == sha1(plaintext).digest():
-            raise CheckSumError("checksum mismatch")
+            raise TklAmqCheckSumError("checksum mismatch")
 
     return plaintext
-

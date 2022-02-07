@@ -15,14 +15,17 @@ import sys
 from tklamq.amqp import __doc__ as env_doc
 from tklamq.amqp import connect, decode_message
 
+
 def usage():
     print("Syntax: %s <queue>" % sys.argv[0], file=sys.stderr)
     print(__doc__, env_doc, file=sys.stderr)
     sys.exit(1)
 
+
 def fatal(s):
     print("error: " + str(s), file=sys.stderr)
     sys.exit(1)
+
 
 def decrypt_callback(message_data, message):
     encrypted = message_data['encrypted']
@@ -36,15 +39,16 @@ def decrypt_callback(message_data, message):
 
     message.ack()
 
+
 def main():
     if not len(sys.argv) == 2:
         usage()
 
     queue = sys.argv[1]
-    
+
     conn = connect()
     conn.consume(queue, callback=decrypt_callback)
 
+
 if __name__ == "__main__":
     main()
-
