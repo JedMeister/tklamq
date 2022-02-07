@@ -9,5 +9,5 @@ setup(
     author_email="jeremy@turnkeylinux.org",
     url="https://github.com/turnkeylinux/tklamq",
     packages=["tklamq_lib"],
-    scripts=["tklamq_consume.py", "tklamq_declare.py", "tklamq_publish.py"]
+    scripts=["tklamq-consume", "tklamq-declare", "tklamq-publish"]
 )
