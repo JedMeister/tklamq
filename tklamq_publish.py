@@ -1,5 +1,6 @@
-#!/usr/bin/python
-# Copyright (c) 2010 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
+#!/usr/bin/python3
+# Copyright (c) 2010-2021 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
+# Copyright (c) 2022 TurnKey GNU/Linux <admin@turnkeylinux.org> - all rights reserved
 """
 Arguments:
 
