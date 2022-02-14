@@ -165,7 +165,7 @@ def decode_message(message_data, secret=None):
     """
     sender = str(message_data['sender'])
     content = base64.urlsafe_b64decode(str(message_data['content']))
-    timestamp = datetime(*[int(f) for f in message_data['timestamp-utc']])
+    timestamp = datetime(*map(int, message_data['timestamp-utc']))
 
     if message_data['encrypted']:
         content = decrypt(content, secret)
