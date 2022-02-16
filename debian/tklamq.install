@@ -1,0 +1,3 @@
+tklamq-consume  /usr/bin/
+tklamq-declare  /usr/bin/
+tklamq-publish  /usr/bin/

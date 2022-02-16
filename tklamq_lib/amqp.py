@@ -1,8 +1,8 @@
-# Copyright (c) 2010 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
+# Copyright (c) 2010-2021 Alon Swartz <alon@turnkeylinux.org> - all rights reserved
+# Copyright (c) 2022 TurnKey GNU/Linux <admin@turnkeylinux.org> - all rights reserved
 
 """
-Environment variables:
-
+environment variables:
     BROKER_HOST         default: localhost
     BROKER_PORT         default: 5672
     BROKER_USER         default: guest
@@ -12,16 +12,18 @@ Environment variables:
 
 import os
 import base64
-import simplejson as json
+import json
 from datetime import datetime
 
 from kombu.connection import BrokerConnection
 from kombu.compat import Publisher, Consumer
 
-from crypto import encrypt, decrypt
+from .crypto import encrypt, decrypt
 
-class Error(Exception):
+
+class TklAmqError(Exception):
     pass
+
 
 class Connection:
     def __init__(self, hostname, port, vhost, userid, password):
@@ -29,13 +31,13 @@ class Connection:
         self.broker = BrokerConnection(hostname=hostname, port=port,
                                        userid=userid, password=password,
                                        virtual_host=vhost)
-    
+
     def __del__(self):
         self.broker.close()
 
     def declare(self, exchange, exchange_type, binding="", queue=""):
         """declares the exchange, the queue and binds the queue to the exchange
-        
+
         exchange        - exchange name
         exchange_type   - direct, topic, fanout
         binding         - binding to queue (optional)
@@ -43,7 +45,8 @@ class Connection:
         """
         if (binding and not queue) or (queue and not binding):
             if queue and not exchange_type == "fanout":
-                raise Error("binding and queue are not mutually exclusive")
+                raise TklAmqError(
+                        "binding and queue are not mutually exclusive")
 
         consumer = Consumer(connection=self.broker,
                             exchange=exchange, exchange_type=exchange_type,
@@ -53,9 +56,10 @@ class Connection:
 
     def consume(self, queue, limit=None, callback=None, auto_declare=False):
         """consume messages in queue
-        
+
         queue           - name of queue
-        limit           - amount of messages to iterate through (default: no limit)
+        limit           - amount of messages to iterate through
+                          (default: no limit)
 
         callback        - method to call when a new message is received
                           must take two arguments: message_data, message
@@ -79,12 +83,14 @@ class Connection:
     def publish(self, exchange, routing_key, message,
                 auto_declare=False, persistent=True):
         """publish a message to exchange using routing_key
-        
+
         exchange        - name of exchange
-        routing_key     - interpretation of routing key depends on exchange type
+        routing_key     - interpretation of routing key depends on exchange
+                          type
         message         - message content to send
         auto_declare    - automatically declare the exchange (default: false)
-        persistent      - store message on disk as well as memory (default: True)
+        persistent      - store message on disk as well as memory
+                          (default: True)
         """
         delivery_mode = 2
         if not persistent:
@@ -97,10 +103,12 @@ class Connection:
         publisher.send(message, delivery_mode=delivery_mode)
         publisher.close()
 
+
 def _consume_callback(message_data, message):
     """default consume callback if not specified"""
-    print message_data
+    print(message_data)
     message.ack()
+
 
 def connect():
     """convenience method using environment variables"""
@@ -143,6 +151,7 @@ def encode_message(sender, content, secret=None):
 
     return message
 
+
 def decode_message(message_data, secret=None):
     """decode message envelope
     args
@@ -156,11 +165,10 @@ def decode_message(message_data, secret=None):
     """
     sender = str(message_data['sender'])
     content = base64.urlsafe_b64decode(str(message_data['content']))
-    timestamp = datetime(*map(lambda f: int(f), message_data['timestamp-utc']))
+    timestamp = datetime(*[int(f) for f in message_data['timestamp-utc']])
 
     if message_data['encrypted']:
         content = decrypt(content, secret)
 
     content = json.loads(content)
     return sender, content, timestamp
-
